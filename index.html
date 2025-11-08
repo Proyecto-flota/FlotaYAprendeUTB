@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>FlotaYAprendeUTB - Principio de Arquímedes</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #333;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    .bubble {
+      position: fixed;
+      bottom: -100px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      opacity: 0.5;
+      animation: float 15s infinite ease-in-out;
+      z-index: 0;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0) translateX(0) scale(1);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.5;
+      }
+      90% {
+        opacity: 0.5;
+      }
+      100% {
+        transform: translateY(-100vh) translateX(100px) scale(1.5);
+        opacity: 0;
+      }
+    }
+
+    .bubble:nth-child(1) { left: 10%; width: 60px; height: 60px; animation-delay: 0s; }
+    .bubble:nth-child(2) { left: 25%; width: 40px; height: 40px; animation-delay: 2s; }
+    .bubble:nth-child(3) { left: 45%; width: 80px; height: 80px; animation-delay: 4s; }
+    .bubble:nth-child(4) { left: 65%; width: 50px; height: 50px; animation-delay: 1s; }
+    .bubble:nth-child(5) { left: 80%; width: 70px; height: 70px; animation-delay: 3s; }
+    .bubble:nth-child(6) { left: 90%; width: 45px; height: 45px; animation-delay: 5s; }
+
+    header {
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.6) 100%);
+      padding: 40px 20px;
+      text-align: center;
+      border-bottom: 4px solid #ffd700;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      position: relative;
+      z-index: 10;
+      backdrop-filter: blur(10px);
+    }
+
+    header h1 {
+      font-size: 3rem;
+      color: #fff;
+      text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+      animation: slideDown 0.8s ease-out;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+
+    header p {
+      color: #ffd700;
+      font-size: 1.2rem;
+      margin-top: 10px;
+      animation: slideDown 1s ease-out;
+      font-weight: 500;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1100px;
+      margin: 40px auto 80px auto;
+      position: relative;
+      z-index: 10;
+    }
+
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    /* Welcome Section */
+    .welcome-card {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 50px 40px;
+      border-radius: 25px;
+      text-align: center;
+      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+      animation: zoomIn 0.6s ease-out;
+      border: 3px solid #ffd700;
+    }
+
+    @keyframes zoomIn {
+      from {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .welcome-card h2 {
+      color: #667eea;
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .welcome-card p {
+      color: #555;
+      font-size: 1.2rem;
+      line-height: 1.8;
+      margin: 15px 0;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .welcome-icon {
+      font-size: 5rem;
+      margin: 20px 0;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+
+    .start-button {
+      margin-top: 30px;
+      padding: 18px 45px;
+      border-radius: 50px;
+      border: none;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 1.3rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .start-button:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 35px rgba(102, 126, 234, 0.7);
+    }
+
+    /* Menu Navigation */
+    .menu-nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+      margin: 30px 0;
+    }
+
+    .menu-card {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 35px 25px;
+      border-radius: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 3px solid transparent;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      animation: fadeInUp 0.6s ease-out;
+      animation-fill-mode: both;
+    }
+
+    .menu-card:nth-child(1) { animation-delay: 0.1s; }
+    .menu-card:nth-child(2) { animation-delay: 0.2s; }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .menu-card:hover {
+      transform: translateY(-10px) scale(1.05);
+      box-shadow: 0 15px 45px rgba(0, 0, 0, 0.3);
+      border-color: #ffd700;
+    }
+
+    .menu-card .icon {
+      font-size: 4rem;
+      margin-bottom: 15px;
+    }
+
+    .menu-card h3 {
+      color: #667eea;
+      font-size: 1.6rem;
+      margin-bottom: 10px;
+    }
+
+    .menu-card p {
+      color: #666;
+      line-height: 1.6;
+      font-size: 1rem;
+    }
+
+    .back-button {
+      padding: 12px 30px;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(135deg, #555 0%, #333 100%);
+      color: white;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      margin-bottom: 25px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .back-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 30px;
+      border-radius: 20px;
+      margin: 25px 0;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 2px solid rgba(255, 215, 0, 0.3);
+      animation: fadeInUp 0.6s ease-out;
+      animation-fill-mode: both;
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+      border-color: #ffd700;
+    }
+
+    .concept h2 {
+      color: #667eea;
+      font-size: 2rem;
+      margin-bottom: 20px;
+      text-align: center;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+      position: relative;
+      padding-bottom: 15px;
+    }
+
+    .concept h2::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 4px;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      border-radius: 2px;
+    }
+
+    .concept h3 {
+      color: #764ba2;
+      margin: 20px 0 12px 0;
+      font-size: 1.4rem;
+      border-left: 4px solid #ffd700;
+      padding-left: 15px;
+    }
+
+    .concept p {
+      margin: 12px 0;
+      color: #444;
+      line-height: 1.8;
+      font-size: 1.05rem;
+    }
+
+    .concept ul {
+      margin: 15px 0 15px 30px;
+      list-style: none;
+    }
+
+    .concept li {
+      margin: 10px 0;
+      padding-left: 30px;
+      position: relative;
+      line-height: 1.6;
+    }
+
+    .concept li::before {
+      content: '➤';
+      position: absolute;
+      left: 0;
+      color: #667eea;
+      font-size: 1.2rem;
+    }
+
+    .video-container {
+      text-align: center;
+      margin: 30px 0;
+      padding: 20px;
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+      border-radius: 15px;
+      border: 2px dashed #667eea;
+    }
+
+    .video-container h4 {
+      color: #667eea;
+      margin-bottom: 15px;
+      font-size: 1.2rem;
+    }
+
+    .video-placeholder {
+      width: 100%;
+      max-width: 800px;
+      height: 450px;
+      margin: 0 auto;
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #666;
+      font-size: 1.1rem;
+      border: 2px dashed #999;
+    }
+
+    .video-placeholder iframe {
+      width: 100%;
+      height: 100%;
+      border-radius: 10px;
+    }
+
+    .exercise {
+      background: linear-gradient(135deg, #f8f9ff 0%, #fff 100%);
+    }
+
+    .exercise h3 {
+      color: #333;
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+      padding: 12px;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      color: white;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .enunciado {
+      background: linear-gradient(135deg, #ffffff 0%, #f0f4ff 100%);
+      border-left: 5px solid #667eea;
+      padding: 20px;
+      border-radius: 12px;
+      margin: 15px 0;
+      color: #333;
+      line-height: 1.7;
+      box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.05);
+      font-size: 1.05rem;
+    }
+
+    .enunciado strong {
+      color: #764ba2;
+      font-weight: 700;
+    }
+
+    .controls {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 20px;
+      padding: 15px;
+      background: rgba(102, 126, 234, 0.05);
+      border-radius: 12px;
+    }
+
+    .controls label {
+      flex: 1;
+      min-width: 250px;
+      font-weight: 600;
+      color: #333;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    input[type="number"], input[type="text"] {
+      padding: 12px 16px;
+      border-radius: 10px;
+      border: 2px solid #ddd;
+      width: 180px;
+      background: white;
+      color: #333;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+
+    input[type="number"]:focus, input[type="text"]:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      transform: scale(1.02);
+    }
+
+    button {
+      padding: 12px 28px;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .feedback {
+      margin-top: 15px;
+      min-height: 50px;
+      font-weight: 600;
+      padding: 15px 20px;
+      border-radius: 10px;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      animation: slideIn 0.3s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .feedback.success {
+      background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+      color: #155724;
+      border-left: 5px solid #28a745;
+      box-shadow: 0 4px 15px rgba(40, 167, 69, 0.2);
+    }
+
+    .feedback.success::before {
+      content: '✓';
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .feedback.warning {
+      background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+      color: #856404;
+      border-left: 5px solid #ffc107;
+      box-shadow: 0 4px 15px rgba(255, 193, 7, 0.2);
+    }
+
+    .feedback.warning::before {
+      content: '⚠';
+      font-size: 1.5rem;
+    }
+
+    .feedback.error {
+      background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+      color: #721c24;
+      border-left: 5px solid #dc3545;
+      box-shadow: 0 4px 15px rgba(220, 53, 69, 0.2);
+    }
+
+    .feedback.error::before {
+      content: '✗';
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+     html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh; 
+    }
+
+    main {
+      flex: 1; 
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: white;
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.6) 100%);
+      font-size: 1.1rem;
+      font-weight: 500;
+      border-top: 4px solid #ffd700;
+      backdrop-filter: blur(10px);
+      z-index: 10;
+      position: relative;
+    }
+
+   
+    html {
+      scroll-behavior: smooth;
+    }
+
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 2rem;
+      }
+
+      header p {
+        font-size: 1rem;
+      }
+
+      .welcome-card h2 {
+        font-size: 1.8rem;
+      }
+
+      .welcome-icon {
+        font-size: 3.5rem;
+      }
+
+      .concept h2 {
+        font-size: 1.6rem;
+      }
+
+      input[type="number"], input[type="text"] {
+        width: 100%;
+      }
+
+      .controls {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .controls label {
+        min-width: auto;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      button {
+        width: 100%;
+      }
+
+      .menu-nav {
+        grid-template-columns: 1fr;
+      }
+
+      .video-placeholder {
+        height: 300px;
+      }
+    }
+
+    .ripple {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ripple::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.5);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+
+    .ripple:active::after {
+      width: 300px;
+      height: 300px;
+    }
+  </style>
+</head>
+<body>
+  <div class="bubble"></div>
+  <div class="bubble"></div>
+  <div class="bubble"></div>
+  <div class="bubble"></div>
+  <div class="bubble"></div>
+  <div class="bubble"></div>
+
+  <header>
+    <h1>🌊 Flota Y Aprende UTB</h1>
+    <p>Principio de Arquímedes · Equilibrio · Estabilidad de Cuerpos Flotantes</p>
+  </header>
+
+  <main class="container">
+
+    <!-- SECCIÓN DE BIENVENIDA -->
+    <section id="welcome" class="section active">
+      <div class="welcome-card">
+        <div class="welcome-icon">🎓</div>
+        <h2>¡Bienvenido a FlotaYAprendeUTB!</h2>
+        <p>Explora el fascinante mundo de la mecánica de fluidos a través del Principio de Arquímedes. Esta plataforma interactiva te permitirá comprender y practicar conceptos fundamentales sobre flotación, equilibrio y estabilidad.</p>
+        <p>Resuelve ejercicios prácticos organizados por niveles de dificultad y pon a prueba tus conocimientos de manera dinámica y visual.</p>
+        <p><strong>¿Estás listo para aprender?</strong></p>
+        <button class="start-button ripple" onclick="showSection('menu')">Comenzar</button>
+      </div>
+    </section>
+
+    <!-- SECCIÓN DE MENÚ -->
+    <section id="menu" class="section">
+      <div class="menu-nav">
+        <div class="menu-card" onclick="showSection('concepts')">
+          <div class="icon">📚</div>
+          <h3>Conceptos Teóricos</h3>
+          <p>Aprende los fundamentos del Principio de Arquímedes, flotación y estabilidad</p>
+        </div>
+        <div class="menu-card" onclick="showSection('exercises')">
+          <div class="icon">✏️</div>
+          <h3>Ejercicios Prácticos</h3>
+          <p>Pon a prueba tus conocimientos con 10 ejercicios interactivos</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN DE CONCEPTOS -->
+    <section id="concepts" class="section">
+      <button class="back-button ripple" onclick="showSection('menu')">⬅ Volver al Menú</button>
+
+      <section class="card concept">
+        <h2>📘 Fundamento Teórico</h2>
+
+        <h3>¿Qué dice el Principio de Arquímedes?</h3>
+        <p>
+          Todo cuerpo total o parcialmente sumergido en un fluido experimenta una fuerza ascendente llamada <strong>empuje</strong>.  
+          Esta fuerza es igual al peso del fluido que el cuerpo desplaza.
+        </p>
+
+        <p style="text-align:center; font-weight:700; margin:20px 0; font-size:1.2rem; color:#667eea;">
+          E = ρ<sub>fluido</sub> × V<sub>sumergido</sub> × g
+        </p>
+
+        <p><strong>Donde:</strong></p>
+        <ul>
+          <li><strong>E</strong>: Empuje (N)</li>
+          <li><strong>ρ<sub>fluido</sub></strong>: Densidad del fluido (kg/m³)</li>
+          <li><strong>V<sub>sumergido</sub></strong>: Volumen del cuerpo dentro del fluido (m³)</li>
+          <li><strong>g</strong>: Aceleración de la gravedad (9.8 m/s²)</li>
+        </ul>
+
+        <div class="video-container">
+          <h4>Video: Introducción al Principio de Arquímedes</h4>
+          <div class="video-placeholder">
+           <!--aquí el iframe del video-->
+          </div>
+        </div>
+
+        <h3>Condiciones de Flotación</h3>
+        <p>
+          El equilibrio de un cuerpo en un fluido depende de la relación entre su <strong>peso</strong> (W) y el <strong>empuje</strong> (E):
+        </p>
+        <ul>
+          <li><strong>E = W:</strong> El cuerpo flota en equilibrio.</li>
+          <li><strong>E &lt; W:</strong> El cuerpo se hunde.</li>
+          <li><strong>E &gt; W:</strong> El cuerpo asciende o emerge.</li>
+        </ul>
+
+        <div class="video-container">
+          <h4>Video: Condiciones de Flotación</h4>
+          <div class="video-placeholder">
+            <!--aquí el iframe del video-->
+          </div>
+        </div>
+
+        <h3>Densidad y Volumen</h3>
+        <p>
+          La densidad es una propiedad fundamental que determina si un objeto flotará o se hundirá:
+        </p>
+        <ul>
+          <li><strong>Densidad (ρ):</strong> Masa por unidad de volumen (kg/m³)</li>
+          <li><strong>Volumen (V):</strong> Espacio ocupado por un cuerpo (m³)</li>
+          <li><strong>Relación:</strong> Si ρ<sub>objeto</sub> &lt; ρ<sub>fluido</sub>, el objeto flota</li>
+        </ul>
+
+        <div class="video-container">
+          <h4>Video: Densidad y su Importancia</h4>
+          <div class="video-placeholder">
+            <!--aquí el iframe del video-->
+          </div>
+        </div>
+
+        <h3>Estabilidad de los Cuerpos Flotantes</h3>
+        <p>
+          La estabilidad se determina por la posición relativa de tres puntos importantes:
+        </p>
+        <ul>
+          <li><strong>Centro de Gravedad (CG):</strong> Punto donde se concentra el peso del cuerpo.</li>
+          <li><strong>Centro de Flotación (CF):</strong> Centro geométrico del volumen sumergido.</li>
+          <li><strong>Metacentro (M):</strong> Punto donde la línea de acción del empuje corta el eje vertical del cuerpo al inclinarse.</li>
+        </ul>
+        <p>
+          <strong>Regla de estabilidad:</strong>  
+          Un cuerpo es estable si el metacentro (M) está por encima del centro de gravedad (CG).  
+          Si M está por debajo del CG, el cuerpo es inestable y tenderá a volcarse.
+        </p>
+
+        <div class="video-container">
+          <h4>Video: Estabilidad de Cuerpos Flotantes</h4>
+          <div class="video-placeholder">
+         <!--aquí el iframe del video-->
+          </div>
+        </div>
+
+        <div class="video-container">
+          <h4>Video: Extra</h4>
+          <div class="video-placeholder">
+            <!--aquí el iframe del video-->
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <!-- SECCIÓN DE EJERCICIOS -->
+    <section id="exercises" class="section">
+      <button class="back-button ripple" onclick="showSection('menu')">⬅ Volver al Menú</button>
+
+      <!-- EJERCICIO 1 -->
+      <article class="card exercise">
+        <h3>Ejercicio 1 — Bloque de Madera Flotando</h3>
+        <div class="enunciado">
+          Un bloque de madera de dimensiones: <strong>altura de <span id="l1"></span> cm, ancho de <span id="l2"></span> cm y largo de <span id="l3"></span> cm</strong>, tiene una densidad de <strong><span id="densMadera"></span> kg/m³</strong>. Se coloca verticalmente en agua con densidad de <strong>1000 kg/m³</strong>.
+          <p>Determinar: <strong>la profundidad sumergida</strong> del bloque (en cm).</p>
+        </div>
+        <div class="controls">
+          <label>Profundidad sumergida (cm): <input id="a1" type="number" step="any"></label>
+          <button class="ripple" onclick="verificar(1)">Verificar</button>
+        </div>
+        <div id="f1" class="feedback"></div>
+      </article>
+
+      <!-- EJERCICIO 2 -->
+      <article class="card exercise">
+        <h3>Ejercicio 2 — Esfera Metálica Sumergida</h3>
+        <div class="enunciado">
+          Una esfera de acero con radio de <strong><span id="radio2"></span> cm</strong> se sumerge completamente en agua. La densidad del acero es <strong>7800 kg/m³</strong>. Calcular el empuje que recibe.
+        </div>
+        <div class="controls">
+          <label>Empuje (N): <input id="a2" type="number" step="any"></label>
+          <button class="ripple" onclick="verificar(2)">Verificar</button>
+        </div>
+        <div id="f2" class="feedback"></div>
+      </article>
+
+      <!-- EJERCICIO 3 -->
+      <article class="card exercise">
+        <h3>Ejercicio 3 — Iceberg Flotante</h3>
+        <div class="enunciado">
+          Un iceberg con densidad de <strong><span id="densHielo3"></span> kg/m³</strong> flota en agua de mar que tiene una densidad de <strong><span id="densMar3"></span> kg/m³</strong>. Si el volumen total del iceberg es <strong><span id="volTotal3"></span> m³</strong>, determinar el volumen que queda por encima del nivel del agua.
+        </div>
+        <div class="controls">
+          <label>Volumen emergido (m³): <input id="a3" type="number" step="any"></label>
+          <button class="ripple" onclick="verificar(3)">Verificar</button>
+        </div>
+        <div id="f3" class="feedback"></div>
+      </article>
+
+      <!-- EJERCICIO 4 -->
+      <article class="card exercise">
+        <h3>Ejercicio 4 — Boya Cilíndrica</h3>
+        <div class="enunciado">
+          Una boya cilíndrica de <strong><span id="diam4"></span> cm de diámetro</strong> y <strong><span id="altura4"></span> m de altura</strong> tiene una masa de <strong><span id="masa4"></span> kg</strong>. Se coloca verticalmente en agua. Calcular la profundidad a la que flotará (en cm).
+        </div>
+        <div class="controls">
+          <label>Profundidad (cm): <input id="a4" type="number" step="any"></label>
+          <button class="ripple" onclick="verificar(4)">Verificar</button>
+        </div>
+        <div id="f4" class="feedback"></div>
+      </article>
+
+      <!-- EJERCICIO 5 -->
+      <article class="card exercise">
+        <h3>Ejercicio 5 — Densidad por Flotación</h3>
+        <div class="enunciado">
+          Un objeto de forma irregular pesa <strong><span id="pesoAire5"></span> N</strong> en el aire y <strong><span id="pesoAgua5"></span> N</strong> cuando está completamente sumergido en agua. Determinar el volumen del objeto (en litros).
+        </div>
+        <div class="controls">
+          <label>Volumen (L): <input id="a5" type="number" step="any"></label>
+          <button class="ripple" onclick="verificar(5)">Verificar</button>
+        </div>
+        <div id="f5" class="feedback"></div>
+      </article>
+
+      <!-- EJERCICIO 6 -->
+      <article class="card exercise">
+        <h3>Ejercicio 6 — Globo de Helio</h3>
+        <div class="enunciado">
+          Un globo esférico de <strong><span id="diam6"></span> m de diámetro</strong> está lleno de helio con una densidad de <strong>0.18 kg/m³</strong>. La masa del material del globo es <strong><span id="masaGlobo6"></span> kg</strong>. Si la densidad del aire es <strong>1.2 kg/m³</strong>, determinar la masa máxima que puede elevar el globo.
+        </div>
+        <div class="controls">
+          <label>Masa (kg): <input id="a6" type="number" step="any"></label>
+          <button class="ripple" onclick="verificar(6)">Verificar</button>
+        </div>
+        <div id="f6" class="feedback"></div>
+      </article>
+
+      <!-- EJERCICIO 7 -->
+      <article class="card exercise">
+        <h3>Ejercicio 7 — Barco Cargado</h3>
+        <div class="enunciado">
+          Un barco de forma rectangular tiene dimensiones de <strong><span id="largo7"></span> m de largo</strong>, <strong><span id="ancho7"></span> m de ancho</strong> y <strong><span id="alto7"></span> m de alto</strong>. El barco vacío pesa <strong><span id="pesoBarco7"></span> N</strong> y flota en agua de mar (densidad <strong>1025 kg/m³</strong>). Calcular el calado del barco vacío (profundidad sumergida en cm).
+        </div>
+        <div class="controls">
+          <label>Calado (cm): <input id="a7" type="number" step="any"></label>
+          <button class="ripple" onclick="verificar(7)">Verificar</button>
+        </div>
+        <div id="f7" class="feedback"></div>
+      </article>
+
+      <!-- EJERCICIO 8 -->
+      <article class="card exercise">
+        <h3>Ejercicio 8 — Cubo de Hielo</h3>
+        <div class="enunciado">
+          Un cubo de hielo de <strong><span id="arista8"></span> cm de arista</strong> (densidad <strong><span id="densHielo8"></span> kg/m³</strong>) flota en un vaso con agua. Determinar qué fracción del cubo permanece sobre el agua (en %).
+        </div>
+        <div class="controls">
+          <label>Fracción emergida (%): <input id="a8" type="number" step="any"></label>
+          <button class="ripple" onclick="verificar(8)">Verificar</button>
+        </div>
+        <div id="f8" class="feedback"></div>
+      </article>
+
+      <!-- EJERCICIO 9 -->
+      <article class="card exercise">
+        <h3>Ejercicio 9 — Cilindro en dos líquidos</h3>
+        <div class="enunciado">
+          Un cilindro de aluminio (densidad <strong>2700 kg/m³</strong>) con radio de <strong><span id="radio9"></span> cm</strong> y altura de <strong><span id="altura9"></span> cm</strong> se coloca en un recipiente que contiene dos líquidos inmiscibles: en el fondo hay mercurio (densidad <strong>13,600 kg/m³</strong>) y encima hay agua (densidad <strong>1000 kg/m³</strong>). Determinar la profundidad sumergida en mercurio h₁ (en cm).
+        </div>
+        <div class="controls">
+          <label>h₁ en mercurio (cm): <input id="a9" type="number" step="any"></label>
+          <button class="ripple" onclick="verificar(9)">Verificar</button>
+        </div>
+        <div id="f9" class="feedback"></div>
+      </article>
+
+      <!-- EJERCICIO 10 -->
+      <article class="card exercise">
+        <h3>Ejercicio 10 — Estabilidad de Balsa</h3>
+        <div class="enunciado">
+          Una balsa rectangular de madera de <strong><span id="largo10"></span> m de largo</strong>, <strong><span id="ancho10"></span> m de ancho</strong> y <strong><span id="espesor10"></span> m de espesor</strong> tiene una densidad de <strong><span id="densMadera10"></span> kg/m³</strong>. Flota en agua dulce. Determinar la profundidad (en cm).
+        </div>
+        <div class="controls">
+          <label>Profundidad (cm): <input id="a10" type="number" step="any"></label>
+          <button class="ripple" onclick="verificar(10)">Verificar</button>
+        </div>
+        <div id="f10" class="feedback"></div>
+      </article>
+
+    </section>
+
+  </main>
+
+  <footer>
+    🎓 Proyecto Mecánica de Fluidos — UTB 2025 
+   <p style="text-align: right;"> <br> <h2>Integrantes:</h2>
+   <br>Jesús Daniel Díaz Yi - T00065244
+   <br>Jorge Luis Florez Marrugo - T00061554
+   <br>Jedry Arellano Sánchez - T00066406
+   <br>Lian Rodríguez - T00064541
+   <br>José Martínez nisperuza - T00058421 </p>
+   
+  </footer>
+
+  <script>
+    // ============================================
+    // NAVEGACIÓN ENTRE SECCIONES
+    // ============================================
+    function showSection(sectionId) {
+      const sections = document.querySelectorAll('.section');
+      sections.forEach(section => {
+        section.classList.remove('active');
+      });
+      
+      const targetSection = document.getElementById(sectionId);
+      if (targetSection) {
+        targetSection.classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    // ============================================
+    // VARIABLES GLOBALES
+    // ============================================
+    let respuestas = {};
+    const TOLVERDE = 5;   // ±5% Verde 
+    const TOLAMAR = 10;   // ±10% Amarillo
+
+    // ============================================
+    // FUNCIONES DE EJERCICIOS
+    // ============================================
+
+    // EJERCICIO 1 
+    function Ejercicio1() {
+      let l1 = 5 + Math.random() * 40;
+      let l2 = 5 + Math.random() * 40;
+      let l3 = 5 + Math.random() * 40;
+      let densMadera = 500 + Math.random() * 200;
+      let densAgua = 1000;
+      
+      let H = (densMadera / densAgua) * l1;
+
+      document.getElementById("l1").textContent = l1.toFixed(1);
+      document.getElementById("l2").textContent = l2.toFixed(1);
+      document.getElementById("l3").textContent = l3.toFixed(1);
+      document.getElementById("densMadera").textContent = densMadera.toFixed(0);
+
+      respuestas[1] = parseFloat(H.toFixed(1));
+      console.log("Ejercicio 1 - Respuesta:", respuestas[1], "cm");
+    }
+
+    // EJERCICIO 2 
+    function Ejercicio2() {
+      let radio = 10 + Math.random() * 15;
+      let radioM = radio / 100;
+      let densAgua = 1000;
+      let g = 9.8;
+      
+      let volumen = (4/3) * Math.PI * Math.pow(radioM, 3);
+      let empuje = densAgua * volumen * g;
+
+      document.getElementById("radio2").textContent = radio.toFixed(1);
+      respuestas[2] = parseFloat(empuje.toFixed(2));
+      console.log("Ejercicio 2 - Respuesta:", respuestas[2], "N");
+    }
+
+    // EJERCICIO 3 
+    function Ejercicio3() {
+      let densHielo = 900 + Math.random() * 40;
+      let densMar = 1020 + Math.random() * 10;
+      let volTotal = 800 + Math.random() * 400;
+      
+      let volSumergido = (densHielo / densMar) * volTotal;
+      let volEmergido = volTotal - volSumergido;
+
+      document.getElementById("densHielo3").textContent = densHielo.toFixed(0);
+      document.getElementById("densMar3").textContent = densMar.toFixed(0);
+      document.getElementById("volTotal3").textContent = volTotal.toFixed(0);
+      
+      respuestas[3] = parseFloat(volEmergido.toFixed(2));
+      console.log("Ejercicio 3 - Respuesta:", respuestas[3], "m³");
+    }
+
+    // EJERCICIO 4 
+    function Ejercicio4() {
+      let diam = 40 + Math.random() * 30;
+      let altura = 1.2 + Math.random() * 0.8;
+      let masa = 150 + Math.random() * 80;
+      
+      let radio = (diam / 100) / 2;
+      let densAgua = 1000;
+      
+      let areaBase = Math.PI * Math.pow(radio, 2);
+      let profundidad = masa / (densAgua * areaBase);
+      let profundidadCm = profundidad * 100;
+
+      document.getElementById("diam4").textContent = diam.toFixed(1);
+      document.getElementById("altura4").textContent = altura.toFixed(1);
+      document.getElementById("masa4").textContent = masa.toFixed(0);
+      
+      respuestas[4] = parseFloat(profundidadCm.toFixed(1));
+      console.log("Ejercicio 4 - Respuesta:", respuestas[4], "cm");
+    }
+
+    // EJERCICIO 5
+    function Ejercicio5() {
+      let pesoAire = 400 + Math.random() * 200;
+      let pesoAgua = pesoAire * (0.5 + Math.random() * 0.3);
+      
+      let g = 9.8;
+      let densAgua = 1000;
+      
+      let empuje = pesoAire - pesoAgua;
+      let volumenM3 = empuje / (densAgua * g);
+      let volumenLitros = volumenM3 * 1000;
+
+      document.getElementById("pesoAire5").textContent = pesoAire.toFixed(0);
+      document.getElementById("pesoAgua5").textContent = pesoAgua.toFixed(0);
+      
+      respuestas[5] = parseFloat(volumenLitros.toFixed(1));
+      console.log("Ejercicio 5 - Respuesta:", respuestas[5], "L");
+    }
+
+    // EJERCICIO 6 
+    function Ejercicio6() {
+      let diam = 1.5 + Math.random() * 1;
+      let masaGlobo = 0.3 + Math.random() * 0.4;
+      
+      let radio = diam / 2;
+      let densHelio = 0.18;
+      let densAire = 1.2;
+      let g = 9.8;
+      
+      let volumen = (4/3) * Math.PI * Math.pow(radio, 3);
+      let empuje = densAire * volumen * g;
+      let pesoHelio = densHelio * volumen * g;
+      let pesoGlobo = masaGlobo * g;
+      let fuerzaNeta = empuje - pesoHelio - pesoGlobo;
+      let masaMax = fuerzaNeta / g;
+
+      document.getElementById("diam6").textContent = diam.toFixed(1);
+      document.getElementById("masaGlobo6").textContent = masaGlobo.toFixed(1);
+      
+      respuestas[6] = parseFloat(masaMax.toFixed(2));
+      console.log("Ejercicio 6 - Respuesta:", respuestas[6], "kg");
+    }
+
+    // EJERCICIO 7 
+    function Ejercicio7() {
+      let largo = 25 + Math.random() * 10;
+      let ancho = 6 + Math.random() * 4;
+      let alto = 3 + Math.random() * 2;
+      let pesoBarco = 500000 + Math.random() * 200000;
+      
+      let densMar = 1025;
+      let g = 9.8;
+      
+      let volSumergido = pesoBarco / (densMar * g);
+      let calado = volSumergido / (largo * ancho);
+      let caladoCm = calado * 100;
+
+      document.getElementById("largo7").textContent = largo.toFixed(0);
+      document.getElementById("ancho7").textContent = ancho.toFixed(0);
+      document.getElementById("alto7").textContent = alto.toFixed(0);
+      document.getElementById("pesoBarco7").textContent = pesoBarco.toFixed(0);
+      
+      respuestas[7] = parseFloat(caladoCm.toFixed(1));
+      console.log("Ejercicio 7 - Respuesta:", respuestas[7], "cm");
+    }
+
+    // EJERCICIO 8 
+    function Ejercicio8() {
+      let arista = 4 + Math.random() * 3;
+      let densHielo = 900 + Math.random() * 40;
+      
+      let densAgua = 1000;
+      
+      let fraccionSumergida = densHielo / densAgua;
+      let fraccionEmergida = 1 - fraccionSumergida;
+      let porcentajeEmergido = fraccionEmergida * 100;
+
+      document.getElementById("arista8").textContent = arista.toFixed(1);
+      document.getElementById("densHielo8").textContent = densHielo.toFixed(0);
+      
+      respuestas[8] = parseFloat(porcentajeEmergido.toFixed(1));
+      console.log("Ejercicio 8 - Respuesta:", respuestas[8], "%");
+    }
+
+    // EJERCICIO 9 
+    function Ejercicio9() {
+      let radio = 8 + Math.random() * 4;
+      let altura = 18 + Math.random() * 6;
+      
+      let densAluminio = 2700;
+      let densMercurio = 13600;
+      let densAgua = 1000;
+      
+      let radioM = radio / 100;
+      let alturaM = altura / 100;
+      
+      let h1 = (densAluminio * alturaM - densAgua * alturaM) / (densMercurio - densAgua);
+      let h1Cm = h1 * 100;
+
+      document.getElementById("radio9").textContent = radio.toFixed(0);
+      document.getElementById("altura9").textContent = altura.toFixed(0);
+      
+      respuestas[9] = parseFloat(h1Cm.toFixed(1));
+      console.log("Ejercicio 9 - Respuesta:", respuestas[9], "cm");
+    }
+
+    // EJERCICIO 10 
+    function Ejercicio10() {
+      let largo = 3 + Math.random() * 2;
+      let ancho = 1.5 + Math.random() * 1;
+      let espesor = 0.25 + Math.random() * 0.15;
+      let densMadera = 600 + Math.random() * 150;
+      
+      let densAgua = 1000;
+      
+      let profundidad = (densMadera / densAgua) * espesor;
+      let profundidadCm = profundidad * 100;
+
+      document.getElementById("largo10").textContent = largo.toFixed(1);
+      document.getElementById("ancho10").textContent = ancho.toFixed(1);
+      document.getElementById("espesor10").textContent = espesor.toFixed(2);
+      document.getElementById("densMadera10").textContent = densMadera.toFixed(0);
+      
+      respuestas[10] = parseFloat(profundidadCm.toFixed(1));
+      console.log("Ejercicio 10 - Respuesta:", respuestas[10], "cm");
+    }
+
+    // ============================================
+    // FUNCIÓN DE VERIFICACIÓN
+    // ============================================
+    function verificar(n, correcto) {
+      if (correcto === undefined) {
+        correcto = respuestas[n];
+      }
+
+      const input = document.getElementById("a" + n);
+      const feedback = document.getElementById("f" + n);
+      const val = parseFloat(input.value);
+
+      feedback.className = "feedback";
+      feedback.textContent = "";
+
+      if (isNaN(val) || input.value.trim() === "") {
+        feedback.textContent = "Por favor, ingresa un número válido.";
+        feedback.classList.add("warning");
+        return;
+      }
+
+      if (correcto === undefined || isNaN(correcto)) {
+        feedback.textContent = "Error del sistema. Recarga la página.";
+        feedback.classList.add("error");
+        console.error("Respuesta correcta no definida para este ejercicio", n);
+        return;
+      }
+
+      let error;
+      if (Math.abs(correcto) < 0.01) {
+        error = Math.abs(val - correcto) * 100;
+      } else {
+        error = Math.abs((val - correcto) / correcto) * 100;
+      }
+
+      if (error <= TOLVERDE) {
+        feedback.textContent = `Tu respuesta es correcta`;
+        feedback.classList.add("success");
+      } else if (error <= TOLAMAR) {
+        feedback.textContent = `Estás muy cerca del resultado. Revisa tus cálculos (posiblemente decimales)`;
+        feedback.classList.add("warning");
+      } else {
+        feedback.textContent = `Incorrecto.`;
+        feedback.classList.add("error");
+      }
+
+      console.log(`Ejercicio ${n} - Tu respuesta: ${val}, Correcta: ${correcto.toFixed(2)}, Error: ${error.toFixed(2)}%`);
+    }
+
+    // ============================================
+    // INICIALIZACIÓN
+    // ============================================
+    window.addEventListener("DOMContentLoaded", function() {
+      Ejercicio1();
+      Ejercicio2();
+      Ejercicio3();
+      Ejercicio4();
+      Ejercicio5();
+      Ejercicio6();
+      Ejercicio7();
+      Ejercicio8();
+      Ejercicio9();
+      Ejercicio10();
+    });
+
+    // ============================================
+    // SOPORTE PARA ENTER
+    // ============================================
+    document.querySelectorAll('input[type="number"]').forEach((input) => {
+      input.addEventListener("keypress", function (e) {
+        if (e.key === "Enter") {
+          const button = this.closest(".controls").querySelector("button");
+          if (button) button.click();
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
