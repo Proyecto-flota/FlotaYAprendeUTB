@@ -637,65 +637,182 @@
     }
 
     @media (max-width: 768px) {
-      header h1 {
-        font-size: 2.2rem;
-      }
-
-      header p {
-        font-size: 1rem;
-      }
-
-      .welcome-card {
-        padding: 40px 30px;
-      }
-
-      .welcome-card h2 {
-        font-size: 2rem;
-      }
-
-      .welcome-icon {
-        font-size: 4rem;
-      }
-
-      .concept h2 {
-        font-size: 1.8rem;
-      }
-
-      .concept h3 {
-        font-size: 1.4rem;
-      }
-
-      input[type="number"], input[type="text"] {
-        width: 100%;
-      }
-
-      .controls {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      .controls label {
-        min-width: auto;
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      button {
-        width: 100%;
-      }
-
-      .menu-nav {
-        grid-template-columns: 1fr;
-      }
-
-      .video-placeholder {
-        height: 350px;
-      }
-
-      .card {
-        padding: 25px;
-      }
+    .container {
+      width: 98%;
+      padding: 0 10px;
+      margin: 15px auto 30px auto;
     }
+
+    header {
+      padding: 25px 15px;
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+      letter-spacing: 1px;
+    }
+
+    header p {
+      font-size: 0.95rem;
+    }
+
+    .welcome-card {
+      padding: 35px 20px;
+      border-radius: 20px;
+    }
+
+    .welcome-card h2 {
+      font-size: 1.8rem;
+    }
+
+    .welcome-card p {
+      font-size: 1rem;
+    }
+
+    .welcome-icon {
+      font-size: 3.5rem;
+    }
+
+    .start-button {
+      padding: 16px 35px;
+      font-size: 1.1rem;
+    }
+
+    .menu-card {
+      padding: 30px 20px;
+    }
+
+    .menu-card .icon {
+      font-size: 3.5rem;
+    }
+
+    .menu-card h3 {
+      font-size: 1.5rem;
+    }
+
+    .menu-card p {
+      font-size: 0.95rem;
+    }
+
+    .concept h2 {
+      font-size: 1.6rem;
+    }
+
+    .concept h3 {
+      font-size: 1.3rem;
+    }
+
+    .concept p {
+      font-size: 1rem;
+      text-align: left;
+    }
+
+    .concept li {
+      font-size: 0.95rem;
+    }
+
+    .formula-box p {
+      font-size: 1.1rem;
+    }
+
+    .exercise h3 {
+      font-size: 1.3rem;
+      padding: 14px;
+    }
+
+    .enunciado {
+      padding: 18px;
+      font-size: 0.98rem;
+    }
+
+    input[type="number"], input[type="text"] {
+      width: 100%;
+    }
+
+    .controls {
+      flex-direction: column;
+      align-items: stretch;
+      padding: 15px;
+    }
+
+    .controls label {
+      min-width: auto;
+      flex-direction: column;
+      align-items: flex-start;
+      font-size: 1rem;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px 20px;
+      font-size: 0.95rem;
+    }
+
+    .back-button {
+      width: 100%;
+      margin-bottom: 10px;
+      margin-right: 0;
+    }
+
+    .menu-nav {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .video-container {
+      padding: 20px 10px;
+    }
+
+    .video-placeholder {
+      height: 250px;
+    }
+
+    .video-container h4 {
+      font-size: 1.1rem;
+    }
+
+    .video-container h5 {
+      font-size: 0.95rem;
+    }
+
+    .card {
+      padding: 20px;
+      margin: 20px 0;
+    }
+
+    .feedback {
+      font-size: 0.95rem;
+      padding: 15px 18px;
+    }
+
+    footer {
+      padding: 20px 15px;
+      font-size: 0.95rem;
+    }
+
+    footer h2 {
+      font-size: 1.1rem;
+    }
+  }
+
+  /* Para pantallas muy pequeñas */
+  @media (max-width: 480px) {
+    header h1 {
+      font-size: 1.5rem;
+    }
+
+    .welcome-card h2 {
+      font-size: 1.5rem;
+    }
+
+    .video-placeholder {
+      height: 200px;
+    }
+
+    .concept h2 {
+      font-size: 1.4rem;
+    }
+  }
 
     .ripple {
       position: relative;
@@ -1093,9 +1210,9 @@
   </footer>
 
   <script>
-    // ============================================
+
     // NAVEGACIÓN ENTRE SECCIONES
-    // ============================================
+
     function showSection(sectionId) {
       const sections = document.querySelectorAll('.section');
       sections.forEach(section => {
@@ -1109,16 +1226,15 @@
       }
     }
 
-    // ============================================
     // VARIABLES GLOBALES
-    // ============================================
+
     let respuestas = {};
     const TOLVERDE = 5;   // ±5% Verde 
     const TOLAMAR = 10;   // ±10% Amarillo
 
-    // ============================================
+
     // FUNCIONES DE EJERCICIOS
-    // ============================================
+
 
     // EJERCICIO 1 
     function Ejercicio1() {
@@ -1319,9 +1435,9 @@
       console.log("Ejercicio 10 - Respuesta:", respuestas[10], "cm");
     }
 
-    // ============================================
+
     // FUNCIÓN DE VERIFICACIÓN
-    // ============================================
+
     function verificar(n, correcto) {
       if (correcto === undefined) {
         correcto = respuestas[n];
@@ -1368,9 +1484,8 @@
       console.log(`Ejercicio ${n} - Tu respuesta: ${val}, Correcta: ${correcto.toFixed(2)}, Error: ${error.toFixed(2)}%`);
     }
 
-    // ============================================
     // INICIALIZACIÓN
-    // ============================================
+
     window.addEventListener("DOMContentLoaded", function() {
       Ejercicio1();
       Ejercicio2();
@@ -1384,9 +1499,7 @@
       Ejercicio10();
     });
 
-    // ============================================
     // SOPORTE PARA ENTER
-    // ============================================
     document.querySelectorAll('input[type="number"]').forEach((input) => {
       input.addEventListener("keypress", function (e) {
         if (e.key === "Enter") {
